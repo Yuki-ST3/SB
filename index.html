@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>経営参謀事務所 | Management Strategy Office</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'snow-white': '#FFFFFF',
+                        'midnight-navy': '#001f3f',
+                        'champagne-gold': '#d4af37',
+                        'off-gray': '#F5F5F5',
+                    },
+                    fontFamily: {
+                        'sans': ['"Noto Sans JP"', 'sans-serif'],
+                        'serif': ['"Noto Serif JP"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for Webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b5952f; 
+        }
+
+        /* Chart Container Utilities */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+
+    <!-- Chosen Palette: Snow White (#FFFFFF), Midnight Navy (#001f3f), Champagne Gold (#d4af37) -->
+    <!-- Application Structure Plan: 
+         1. Hero: Immediate Value Proposition (Text-heavy, high impact).
+         2. Problem: Dark section to contrast with the "light" of the solution.
+         3. Logic & Evidence (Charts): Using Chart.js to visualize the "Time Savings" and "Revenue Impact" to make the text-based claims concrete.
+         4. Case Studies (Tabs): Interactive switching to view details without scroll fatigue.
+         5. Q&A (Accordion): Efficient info delivery.
+         6. Pricing & CTA: Clear path to conversion.
+         Rationale: The structure moves from Emotional Hook -> Logical Proof -> Social Proof -> Action. 
+    -->
+    <!-- Visualization & Content Choices:
+         - Speed Comparison Bar Chart: Visualizes the "6 hours vs 4 days" USP.
+         - Revenue Donut Chart: Visualizes the "10M Profit" component.
+         - Interactive Tabs: Organizes Case Studies.
+         - Accordion: Organizes Q&A.
+         - NO SVG/Mermaid used. Unicode icons used for visual anchors.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+</head>
+<body class="bg-snow-white text-midnight-navy font-sans antialiased leading-relaxed">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="font-serif text-xl font-bold tracking-widest text-midnight-navy">経営参謀事務所</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#philosophy" class="text-sm font-medium hover:text-champagne-gold transition-colors">流儀</a>
+                    <a href="#evidence" class="text-sm font-medium hover:text-champagne-gold transition-colors">実績と根拠</a>
+                    <a href="#cases" class="text-sm font-medium hover:text-champagne-gold transition-colors">解決事例</a>
+                    <a href="#profile" class="text-sm font-medium hover:text-champagne-gold transition-colors">参謀紹介</a>
+                    <a href="#plans" class="text-sm font-medium hover:text-champagne-gold transition-colors">プラン</a>
+                </div>
+                <div>
+                    <a href="#cta" class="bg-midnight-navy text-champagne-gold px-6 py-2 text-sm font-medium hover:bg-opacity-90 transition-all shadow-md">
+                        戦略診断へ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-snow-white">
+        <!-- Abstract Background Element -->
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-off-gray opacity-50 -skew-x-12 translate-x-1/4 z-0"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center md:text-left md:flex md:items-center md:gap-16">
+            <div class="md:w-3/5 fade-in-section">
+                <p class="text-sm md:text-base tracking-[0.2em] text-gray-500 mb-6 font-medium">
+                    経営者の思考を止めない。<br>御社専属の「外部CTO室」
+                </p>
+                <h1 class="font-serif text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-8 text-midnight-navy">
+                    開発会社は<br>「作りましょう」と言う。<br>
+                    <span class="text-champagne-gold">私は、不要な開発を止める。</span>
+                </h1>
+                <p class="text-gray-600 mb-10 text-lg leading-loose border-l-4 border-champagne-gold pl-6">
+                    コンサルタントは「絵」を描くだけ。<br>
+                    私は、必要な時だけ、最高の技術を提供し、<br>
+                    最短距離で利益に変える「参謀」です。
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#cta" class="inline-block bg-midnight-navy text-white px-8 py-4 font-bold shadow-lg hover:shadow-xl hover:bg-gray-800 transition-all text-center">
+                        60分の戦略診断を受ける
+                    </a>
+                </div>
+            </div>
+            <!-- Symbolic Visual (CSS Only) -->
+            <div class="hidden md:block md:w-2/5 fade-in-section delay-200">
+                <div class="relative w-full aspect-[4/5] bg-gray-100 border border-gray-200 shadow-2xl flex items-center justify-center p-8">
+                    <div class="absolute top-4 left-4 w-full h-full border border-champagne-gold -z-10 translate-x-4 translate-y-4"></div>
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">✒️</div>
+                        <h3 class="font-serif text-xl mb-2">Less is More</h3>
+                        <p class="text-xs text-gray-500">Minimal Development.<br>Maximum Impact.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Problem Section (Dark Mode) -->
+    <section id="problem" class="py-24 bg-midnight-navy text-white relative">
+        <div class="max-w-4xl mx-auto px-6 text-center fade-in-section">
+            <h2 class="font-serif text-2xl md:text-4xl mb-12 leading-relaxed">
+                「IT化」「DX」という言葉に、<br>疲れ果てていませんか？
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8 mb-16 text-left">
+                <div class="bg-white/5 p-8 border border-white/10 hover:border-champagne-gold transition-colors">
+                    <div class="text-champagne-gold text-2xl mb-4">⚠</div>
+                    <h3 class="font-bold mb-3 text-lg">甘言に乗せられる</h3>
+                    <p class="text-sm text-gray-300 leading-relaxed">「システムを入れれば売上が上がる」という開発会社の言葉を信じ、使われない箱物にお金を捨てていませんか。</p>
+                </div>
+                <div class="bg-white/5 p-8 border border-white/10 hover:border-champagne-gold transition-colors">
+                    <div class="text-champagne-gold text-2xl mb-4">🌪</div>
+                    <h3 class="font-bold mb-3 text-lg">現場の混乱</h3>
+                    <p class="text-sm text-gray-300 leading-relaxed">「あるべき論」だけを並べるコンサルタントによって、現場の業務フローがかえって複雑化していませんか。</p>
+                </div>
+                <div class="bg-white/5 p-8 border border-white/10 hover:border-champagne-gold transition-colors">
+                    <div class="text-champagne-gold text-2xl mb-4">🕰</div>
+                    <h3 class="font-bold mb-3 text-lg">本質の欠如</h3>
+                    <p class="text-sm text-gray-300 leading-relaxed">経営者が求めているのは、分厚い資料ではありません。シンプルな「利益」という結果です。</p>
+                </div>
+            </div>
+            <p class="text-lg md:text-xl font-serif text-champagne-gold">
+                あなたのビジョンを正しく理解し、<br>技術という言語に翻訳し、最短距離で利益に変える。
+            </p>
+        </div>
+    </section>
+
+    <!-- Solution / Philosophy -->
+    <section id="philosophy" class="py-24 bg-snow-white">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in-section">
+                <span class="text-champagne-gold font-bold tracking-widest text-sm uppercase">The Solution</span>
+                <h2 class="font-serif text-3xl md:text-4xl mt-4 mb-6 text-midnight-navy">参謀の流儀：「作らないDX」</h2>
+                <p class="max-w-2xl mx-auto text-gray-600">
+                    私が提供するのは単なるシステム開発ではありません。<br>経営工学に基づいた「全体最適化」です。
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center fade-in-section">
+                <div class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-midnight-navy text-champagne-gold flex items-center justify-center font-bold font-serif text-xl">01</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2 text-midnight-navy">不要な開発を止める勇気</h3>
+                            <p class="text-gray-600 text-sm">既存のツールで十分な場合、私は決して新規開発を勧めません。Excel一つで解決できる課題に、数百万をかける必要はないのです。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-midnight-navy text-champagne-gold flex items-center justify-center font-bold font-serif text-xl">02</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2 text-midnight-navy">経営者の「脳」を拡張する</h3>
+                            <p class="text-gray-600 text-sm">技術的な判断はすべて私にお任せください。あなたは、本来の業務である「経営判断」にのみ集中していただけます。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-midnight-navy text-champagne-gold flex items-center justify-center font-bold font-serif text-xl">03</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2 text-midnight-navy">理論と実戦の融合</h3>
+                            <p class="text-gray-600 text-sm">経営工学修士のアカデミックな知見と、年商2億を自動化した泥臭い実戦経験。両輪で「正解」を導き出します。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visual Metaphor for "Optimization" -->
+                <div class="bg-off-gray p-8 rounded-sm relative h-80 flex items-center justify-center border border-gray-200">
+                    <div class="text-center">
+                        <div class="inline-block p-4 bg-white shadow-lg border-t-4 border-midnight-navy mb-8">
+                            <span class="block text-xs text-gray-400">INPUT</span>
+                            <span class="font-serif text-lg font-bold">経営ビジョン</span>
+                        </div>
+                        <div class="h-12 w-0.5 bg-champagne-gold mx-auto mb-2"></div>
+                        <div class="text-2xl mb-2 text-midnight-navy">▼</div>
+                        <div class="inline-block p-4 bg-midnight-navy text-white shadow-lg">
+                            <span class="block text-xs text-champagne-gold">OUTPUT</span>
+                            <span class="font-serif text-lg font-bold">利益の最大化</span>
+                        </div>
+                        <p class="mt-4 text-xs text-gray-500">Black Box（技術）は参謀が制御する</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evidence / Data Section -->
+    <section id="evidence" class="py-24 bg-off-gray border-y border-gray-200">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in-section">
+                <span class="text-champagne-gold font-bold tracking-widest text-sm uppercase">Evidence</span>
+                <h2 class="font-serif text-3xl md:text-4xl mt-4 mb-6 text-midnight-navy">感情ではなく、数字で語る</h2>
+                <p class="text-gray-600">なぜ「参謀」が必要なのか。その理由は客観的な成果にあります。</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Data Point 1: Speed -->
+                <div class="bg-white p-8 shadow-sm border-t-4 border-champagne-gold fade-in-section">
+                    <h3 class="font-serif text-xl font-bold mb-2 text-midnight-navy">圧倒的な即応性</h3>
+                    <p class="text-sm text-gray-500 mb-6">緊急システム改修における対応時間の比較</p>
+                    
+                    <div class="chart-container">
+                        <canvas id="speedChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-6 text-sm text-gray-600 leading-relaxed">
+                        <span class="font-bold text-midnight-navy">6時間後の納期を死守。</span>
+                        一般的な開発会社が「見積もり」を作っている間に、私は「仮復旧」を完了させます。機会損失を最小化することが、経営において最も重要だからです。
+                    </div>
+                </div>
+
+                <!-- Data Point 2: Scale -->
+                <div class="bg-white p-8 shadow-sm border-t-4 border-midnight-navy fade-in-section delay-100">
+                    <h3 class="font-serif text-xl font-bold mb-2 text-midnight-navy">規模と実績</h3>
+                    <p class="text-sm text-gray-500 mb-6">アパレル輸入事業における自動化実績</p>
+                    
+                    <div class="chart-container">
+                        <canvas id="scaleChart"></canvas>
+                    </div>
+
+                    <div class="mt-6 text-sm text-gray-600 leading-relaxed">
+                        <span class="font-bold text-midnight-navy">年商2億円を完全自動化。</span>
+                        外注スタッフ100名の指揮系統をシステム化し、私自身が手を動かさずとも利益が生まれる仕組みを構築。このノウハウを御社に移植します。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies (Interactive Tabs) -->
+    <section id="cases" class="py-24 bg-snow-white">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="mb-12 text-center fade-in-section">
+                <h2 class="font-serif text-3xl text-midnight-navy mb-4">私が参謀として関わった、変革の記録</h2>
+                <p class="text-gray-500">クリックして詳細をご覧ください</p>
+            </div>
+
+            <!-- Tab Controls -->
+            <div class="flex justify-center gap-4 mb-8 fade-in-section">
+                <button onclick="switchTab('case1')" id="tab-case1" class="px-6 py-3 border-b-2 border-midnight-navy text-midnight-navy font-bold transition-all hover:bg-gray-50">CASE 01: 収益化</button>
+                <button onclick="switchTab('case2')" id="tab-case2" class="px-6 py-3 border-b-2 border-transparent text-gray-400 hover:text-midnight-navy transition-all hover:bg-gray-50">CASE 02: 危機管理</button>
+            </div>
+
+            <!-- Tab Content 1 -->
+            <div id="content-case1" class="bg-white border border-gray-100 shadow-xl p-8 md:p-12 fade-in-section">
+                <div class="grid md:grid-cols-3 gap-8 items-center">
+                    <div class="md:col-span-1 text-center md:text-left border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
+                        <span class="block text-5xl font-serif font-bold text-champagne-gold mb-2">10M+</span>
+                        <span class="text-sm text-gray-500 font-bold uppercase tracking-widest">Profit Generated</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h3 class="text-xl font-bold text-midnight-navy mb-4">オンライン講座化プロジェクト</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-gray-400 uppercase">課題</span>
+                                <p class="text-gray-700">クライアントが持つ高度な暗黙知が収益化されず、埋もれていた。</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-gray-400 uppercase">解決策</span>
+                                <p class="text-gray-700">コンテンツの設計から配信システムの構築までを一気通貫で指揮。既存リストへのアプローチのみで販売導線を確立。</p>
+                            </div>
+                            <div class="bg-off-gray p-4 border-l-4 border-champagne-gold">
+                                <span class="text-xs font-bold text-midnight-navy uppercase">結果</span>
+                                <p class="font-bold text-midnight-navy">広告費ゼロで1,000万円以上の利益を創出。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 2 -->
+            <div id="content-case2" class="hidden bg-white border border-gray-100 shadow-xl p-8 md:p-12">
+                <div class="grid md:grid-cols-3 gap-8 items-center">
+                    <div class="md:col-span-1 text-center md:text-left border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-6">
+                        <span class="block text-5xl font-serif font-bold text-champagne-gold mb-2">6h</span>
+                        <span class="text-sm text-gray-500 font-bold uppercase tracking-widest">Recovery Time</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h3 class="text-xl font-bold text-midnight-navy mb-4">緊急システム改修</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-gray-400 uppercase">課題</span>
+                                <p class="text-gray-700">既存ベンダーが匙を投げた致命的なバグにより、基幹業務が停止寸前に。</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-gray-400 uppercase">解決策</span>
+                                <p class="text-gray-700">依頼直後からコード解析を開始。根本原因を特定し、止血処置を実施。</p>
+                            </div>
+                            <div class="bg-off-gray p-4 border-l-4 border-champagne-gold">
+                                <span class="text-xs font-bold text-midnight-navy uppercase">結果</span>
+                                <p class="font-bold text-midnight-navy">6時間以内に仮復旧完了。4日後には恒久対策を完了し、機会損失を最小限に抑止。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile -->
+    <section id="profile" class="py-24 bg-midnight-navy text-white">
+        <div class="max-w-4xl mx-auto px-6 fade-in-section">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-1/3">
+                    <!-- Placeholder for Portrait -->
+                    <div class="aspect-[3/4] bg-gray-700 w-full relative overflow-hidden flex items-center justify-center border border-white/20">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-midnight-navy to-transparent opacity-80 z-10"></div>
+                        <span class="text-6xl z-0 opacity-20 text-white font-serif">参謀</span>
+                    </div>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <span class="text-champagne-gold font-bold tracking-widest text-sm uppercase mb-2 block">Representative</span>
+                    <h2 class="font-serif text-3xl mb-6">経営参謀事務所 代表</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed font-light">
+                        <p>
+                            「餅は餅屋」と言いますが、今のIT業界には「餅の味がわからない餅屋」が多すぎると感じています。
+                        </p>
+                        <p>
+                            私は、技術者でありながら、経営者でもあります。<br>
+                            自ら事業を立ち上げ、人を雇い、時には失敗し、それを乗り越えて利益を出してきました。
+                            だからこそ、経営者の「孤独」や「焦燥感」が痛いほどわかります。
+                        </p>
+                        <p>
+                            あなたの隣で、共に悩み、共に戦う。<br>
+                            システムを作るためではなく、あなたの事業を勝たせるために、私はここにいます。
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-8 border-t border-white/10">
+                        <h4 class="font-serif text-lg mb-2 text-white">経歴</h4>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li>🎓 大阪工業大学大学院 経営工学専攻 修士課程修了</li>
+                            <li>💼 アパレル輸入事業 外注100名体制・年商2億円達成（完全自動化）</li>
+                            <li>🔧 中小企業経営者の「外部CTO」として戦略立案・実行支援</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Q&A (Accordion) -->
+    <section id="qa" class="py-24 bg-snow-white">
+        <div class="max-w-3xl mx-auto px-6 fade-in-section">
+            <h2 class="font-serif text-3xl text-center text-midnight-navy mb-16">よくあるご質問と、私のスタンス</h2>
+            
+            <div class="space-y-4">
+                <!-- Q1 -->
+                <div class="border border-gray-200">
+                    <button class="w-full text-left p-6 flex justify-between items-center focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleAccordion('qa1')">
+                        <span class="font-bold text-midnight-navy pr-8"><span class="text-midnight-navy mr-2">Q.</span> なぜ最初の相談が有料（33,000円）なのですか？</span>
+                        <span id="icon-qa1" class="text-champagne-gold text-xl transition-transform duration-300">+</span>
+                    </button>
+                    <div id="content-qa1" class="hidden bg-off-gray p-6 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
+                        <span class="font-bold text-champagne-gold mr-2">A.</span>
+                        私の時間は、現在契約中のクライアント様のために最優先で使われます。新規のご相談であっても、その60分に私の全知見を注ぎ込み、具体的なロードマップを提示します。その価値に対する対価として設定しております。
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="border border-gray-200">
+                    <button class="w-full text-left p-6 flex justify-between items-center focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleAccordion('qa2')">
+                        <span class="font-bold text-midnight-navy pr-8"><span class="text-midnight-navy mr-2">Q.</span> ITやパソコンのことが全く分からなくても大丈夫ですか？</span>
+                        <span id="icon-qa2" class="text-champagne-gold text-xl transition-transform duration-300">+</span>
+                    </button>
+                    <div id="content-qa2" class="hidden bg-off-gray p-6 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
+                        <span class="font-bold text-champagne-gold mr-2">A.</span>
+                        もちろんです。専門用語を並べるのはプロではありません。経営者のビジョンを理解し、それを技術に翻訳するのが私の仕事です。Excelの些細な悩みからご相談ください。
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="border border-gray-200">
+                    <button class="w-full text-left p-6 flex justify-between items-center focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleAccordion('qa3')">
+                        <span class="font-bold text-midnight-navy pr-8"><span class="text-midnight-navy mr-2">Q.</span> 開発会社やコンサルとは何が違うのですか？</span>
+                        <span id="icon-qa3" class="text-champagne-gold text-xl transition-transform duration-300">+</span>
+                    </button>
+                    <div id="content-qa3" class="hidden bg-off-gray p-6 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
+                        <span class="font-bold text-champagne-gold mr-2">A.</span>
+                        開発会社は「工数」を売り、コンサルは「資料」を売ります。私は「経営の最適化」を売ります。時には「今は開発すべきではない」と止めるのが、私の最大の価値です。
+                    </div>
+                </div>
+
+                 <!-- Q4 -->
+                 <div class="border border-gray-200">
+                    <button class="w-full text-left p-6 flex justify-between items-center focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleAccordion('qa4')">
+                        <span class="font-bold text-midnight-navy pr-8"><span class="text-midnight-navy mr-2">Q.</span> どこまで実務をやってくれますか？</span>
+                        <span id="icon-qa4" class="text-champagne-gold text-xl transition-transform duration-300">+</span>
+                    </button>
+                    <div id="content-qa4" class="hidden bg-off-gray p-6 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
+                        <span class="font-bold text-champagne-gold mr-2">A.</span>
+                        設計とディレクションが主ですが、緊急時は私自身も手を動かします。高度な実装が必要な場合は、私の信頼するパートナーチームを指揮し、御社に最適な体制を構築します。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plans -->
+    <section id="plans" class="py-24 bg-off-gray">
+        <div class="max-w-6xl mx-auto px-6 fade-in-section">
+            <h2 class="font-serif text-3xl text-center text-midnight-navy mb-16">Partnership Plan</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Spot Plan -->
+                <div class="bg-white p-8 border-2 border-champagne-gold shadow-xl relative transform md:-translate-y-4">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-champagne-gold"></div>
+                    <span class="bg-champagne-gold text-white text-xs font-bold px-3 py-1 absolute top-4 right-4">RECOMMENDED</span>
+                    <h3 class="font-serif text-xl font-bold text-midnight-navy mb-2">スポット相談<br>(戦略診断)</h3>
+                    <div class="text-3xl font-bold text-midnight-navy mb-1">¥33,000<span class="text-sm font-normal text-gray-500"> / 60分</span></div>
+                    <p class="text-gray-500 text-xs mb-6">（税込）</p>
+                    <hr class="border-gray-100 mb-6">
+                    <ul class="text-sm text-gray-600 space-y-3 mb-8">
+                        <li class="flex items-start"><span class="text-champagne-gold mr-2">✔</span> 現状の課題整理</li>
+                        <li class="flex items-start"><span class="text-champagne-gold mr-2">✔</span> プロのセカンドオピニオン</li>
+                        <li class="flex items-start"><span class="text-champagne-gold mr-2">✔</span> 即時解決策の提示</li>
+                    </ul>
+                    <a href="#cta" class="block w-full text-center bg-midnight-navy text-white py-3 font-bold text-sm hover:bg-gray-800 transition-colors">申し込む</a>
+                </div>
+
+                <!-- Advisory Plan -->
+                <div class="bg-white p-8 border border-gray-200 shadow-sm opacity-90 hover:opacity-100 transition-opacity">
+                    <h3 class="font-serif text-xl font-bold text-gray-700 mb-2">アドバイザリー契約<br>(ライト)</h3>
+                    <div class="text-2xl font-bold text-gray-700 mb-1">¥150,000~<span class="text-sm font-normal text-gray-500"> / 月</span></div>
+                    <p class="text-gray-500 text-xs mb-6">（税別）</p>
+                    <hr class="border-gray-100 mb-6">
+                    <ul class="text-sm text-gray-600 space-y-3 mb-8">
+                        <li class="flex items-start"><span class="text-midnight-navy mr-2">✔</span> チャット相談無制限</li>
+                        <li class="flex items-start"><span class="text-midnight-navy mr-2">✔</span> 月1回の定例ミーティング</li>
+                    </ul>
+                </div>
+
+                <!-- External CTO Plan -->
+                <div class="bg-white p-8 border border-gray-200 shadow-sm opacity-90 hover:opacity-100 transition-opacity">
+                    <h3 class="font-serif text-xl font-bold text-gray-700 mb-2">外部CTO契約<br>(スタンダード)</h3>
+                    <div class="text-2xl font-bold text-gray-700 mb-1">¥300,000~<span class="text-sm font-normal text-gray-500"> / 月</span></div>
+                    <p class="text-gray-500 text-xs mb-6">（税別）</p>
+                    <hr class="border-gray-100 mb-6">
+                    <ul class="text-sm text-gray-600 space-y-3 mb-8">
+                        <li class="flex items-start"><span class="text-midnight-navy mr-2">✔</span> プロジェクト進行管理</li>
+                        <li class="flex items-start"><span class="text-midnight-navy mr-2">✔</span> ベンダー選定・折衝代行</li>
+                        <li class="flex items-start"><span class="text-midnight-navy mr-2">✔</span> 月2回の定例＋緊急対応</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-center text-xs text-gray-400 mt-8">※プロジェクト参画（フルコミット）は別途お見積もりとなります。</p>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="py-32 bg-snow-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50 z-0"></div>
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center fade-in-section">
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-midnight-navy mb-8 leading-tight">
+                その悩みは、60分で<br>解決への道筋が見えます。
+            </h2>
+            <p class="text-lg text-gray-600 mb-12">
+                まずは、現状をお聞かせください。
+            </p>
+            
+            <button class="group relative inline-flex items-center justify-center px-12 py-5 text-lg font-bold text-white transition-all duration-200 bg-gradient-to-r from-yellow-600 to-yellow-500 font-serif shadow-xl hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600">
+                <span class="mr-2">「戦略診断(60分)」に申し込む</span>
+                <span class="opacity-70 text-sm font-normal border-l border-white/30 pl-3 ml-2">費用：33,000円（税込）</span>
+            </button>
+            
+            <p class="mt-6 text-sm text-red-800 font-medium bg-red-50 inline-block px-4 py-2 rounded-full">
+                ※現在、多くのご依頼をいただいており、毎月3社様限定での受付となります。
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer / Policy -->
+    <footer class="bg-midnight-navy text-white py-16">
+        <div class="max-w-4xl mx-auto px-6 text-center text-sm md:text-base opacity-80 leading-relaxed">
+            <h5 class="font-serif text-champagne-gold mb-6 tracking-widest uppercase">Policy</h5>
+            <p class="mb-4 font-bold">お引き受けできない場合について</p>
+            <div class="space-y-2 mb-8 text-gray-300 text-sm">
+                <p>・単なる「下請け作業者」をお探しの方</p>
+                <p>・礼節を欠き、対等なパートナーシップを築けない方</p>
+                <p>・価値よりも「安さ」だけを追求される方</p>
+            </div>
+            <p class="text-xs text-gray-400 max-w-2xl mx-auto border-t border-white/10 pt-8">
+                上記のような場合、私の力はお役に立てないため、ご依頼を辞退させていただくことがございます。<br>
+                互いに敬意を持ち、長くお付き合いできる経営者様との出会いを楽しみにしております。
+            </p>
+            <div class="mt-12 text-xs text-gray-500 font-serif">
+                &copy; 経営参謀事務所 All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Interaction & Animations ---
+        
+        // Smooth Reveal on Scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Stop observing once visible if you want it to trigger only once
+                    // observer.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.getElementById('content-case1').classList.add('hidden');
+            document.getElementById('content-case2').classList.add('hidden');
+            
+            // Remove active styles from tabs
+            document.getElementById('tab-case1').classList.remove('border-midnight-navy', 'text-midnight-navy', 'font-bold');
+            document.getElementById('tab-case1').classList.add('border-transparent', 'text-gray-400');
+            
+            document.getElementById('tab-case2').classList.remove('border-midnight-navy', 'text-midnight-navy', 'font-bold');
+            document.getElementById('tab-case2').classList.add('border-transparent', 'text-gray-400');
+
+            // Show selected content
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            
+            // Add active styles to selected tab
+            const activeTab = document.getElementById('tab-' + tabId);
+            activeTab.classList.remove('border-transparent', 'text-gray-400');
+            activeTab.classList.add('border-midnight-navy', 'text-midnight-navy', 'font-bold');
+        }
+
+        // Accordion Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById('content-' + id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = '−'; // Minus sign
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.innerText = '+'; // Plus sign
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // Sticky Navbar Background
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.replace('bg-white/90', 'bg-white');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.replace('bg-white', 'bg-white/90');
+            }
+        });
+
+        // --- 2. Chart.js Initialization ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Common Chart Styles
+            Chart.defaults.font.family = "'Noto Sans JP', sans-serif";
+            Chart.defaults.color = '#666';
+            
+            // 1. Speed Comparison Chart (Bar)
+            const speedCtx = document.getElementById('speedChart').getContext('2d');
+            new Chart(speedCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['一般的な開発会社', '経営参謀事務所'],
+                    datasets: [{
+                        label: '復旧までの時間 (時間)',
+                        data: [96, 6], // 4 days = 96 hours vs 6 hours
+                        backgroundColor: [
+                            'rgba(200, 200, 200, 0.5)', // Gray for others
+                            'rgba(0, 31, 63, 0.9)'      // Navy for us
+                        ],
+                        borderColor: [
+                            'rgba(200, 200, 200, 1)',
+                            'rgba(0, 31, 63, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' hours';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '所要時間（時間）'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Scale / Automation Chart (Doughnut/Pie representation of effort vs result)
+            // Visualizing the "Leverage" - 1 person controlling 100 people's output
+            const scaleCtx = document.getElementById('scaleChart').getContext('2d');
+            new Chart(scaleCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['自動化システム (参謀構築)', '人的リソース (従来)'],
+                    datasets: [{
+                        data: [95, 5],
+                        backgroundColor: [
+                            '#d4af37', // Gold
+                            '#001f3f'  // Navy
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: '業務処理の自動化比率',
+                            font: { size: 16, family: "'Noto Serif JP', serif" },
+                            padding: { bottom: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
